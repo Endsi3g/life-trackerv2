@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# Life Tracker V2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A robust, scalable, and aesthetically premium "Cal.com for Life" application built for rapid progress tracking and AI-assisted life management.
 
-Currently, two official plugins are available:
+## 🚀 Vision
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Transforming the way we track our lives with a minimalist, high-contrast UI inspired by the "Cal.com" aesthetic. Life Tracker V2 is a full-stack, mobile-ready solution designed for performance and clarity.
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **📊 Dashboard**: Dynamic "Bento-grid" layout showing your daily score and vital stats.
+- **✅ Task Management**: Full CRUD support for tasks with image attachments and categorization.
+- **📈 Habit Tracking**: Log habits daily with beautiful progress visualizations (Ring UI).
+- **⏱️ Focus Mode**: Integrated Pomodoro-style timer with customizable intervals (25/45/60 min).
+- **📝 Journaling**: Quick daily entries with media support to capture your thoughts.
+- **🤖 AI Assistant**: Natural language command processing (e.g., "add task Buy milk", "journal I had a great day").
 
-## Expanding the ESLint configuration
+## 🛠️ Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend**: React 18, Vite, TypeScript
+- **Styling**: Tailwind CSS, Framer Motion (Animations), Lucide React (Icons)
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **Mobile**: Capacitor (iOS & Android)
+- **Deployment**: Vercel/Netlify (Web)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🏗️ Installation & Setup
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. **Clone the repository**:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+   ```bash
+   git clone https://github.com/Endsi3g/life-trackerv2.git
+   cd life-trackerv2
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment**:
+   Create a `.env` file with your Supabase credentials:
+
+   ```env
+   VITE_SUPABASE_URL=your_project_url
+   VITE_SUPABASE_ANON_KEY=your_anon_key
+   ```
+
+4. **Run Local Development**:
+   Use the provided script to start Supabase (Docker) and the Vite dev server simultaneously:
+
+   ```powershell
+   .\dev-local.ps1
+   ```
+
+## 📱 Mobile Deployment
+
+Sync and open the native project:
+
+```bash
+npm run build
+npx cap sync
+npx cap open android # or ios
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📄 License
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+MIT
