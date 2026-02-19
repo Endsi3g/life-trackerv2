@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Save, Calendar } from "lucide-react";
+import { IconSend, IconCalendar, IconSparkles } from "@/components/shared/Icons";
+import { cn } from "@/lib/utils";
 
 export default function JournalTab() {
     const [entry, setEntry] = useState("");
@@ -10,44 +10,67 @@ export default function JournalTab() {
         if (!entry.trim()) return;
         setIsSaving(true);
         // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 800));
         setEntry("");
         setIsSaving(false);
     };
 
     return (
-        <div className="space-y-4 pb-20">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-slate-900">Journal</h2>
-                <button
-                    onClick={handleSave}
-                    disabled={!entry.trim() || isSaving}
-                    className="bg-slate-900 text-white p-2 rounded-xl hover:bg-slate-800 disabled:opacity-50 transition-all flex items-center gap-2 px-4"
-                >
-                    <Save size={18} />
-                    {isSaving ? "Saving..." : "Save"}
-                </button>
-            </div>
-
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 min-h-[60vh] flex flex-col"
-            >
-                <div className="flex items-center gap-2 text-slate-400 mb-4 border-b border-slate-50 pb-2">
-                    <Calendar size={16} />
-                    <span className="text-sm font-medium">
-                        {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+        <div className="flex flex-col gap-[13px] animate-fade-up pb-24">
+            <div className="flex justify-between items-center px-1">
+                <p className="text-[#a0a8b5] text-[10.5px] font-bold tracking-[1.2px] uppercase">Journal</p>
+                <div className="flex items-center gap-2 text-[#94a3b8]">
+                    <IconCalendar size={14} />
+                    <span className="text-[11px] font-bold">
+                        {new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
                     </span>
                 </div>
+            </div>
 
+            <div className="card-base min-h-[50vh] flex flex-col p-6">
                 <textarea
                     value={entry}
                     onChange={(e) => setEntry(e.target.value)}
-                    placeholder="What's on your mind today?"
-                    className="flex-1 w-full resize-none outline-none text-slate-700 placeholder:text-slate-300 leading-relaxed font-sans"
+                    placeholder="Quoi de neuf aujourd'hui ?"
+                    className="flex-1 w-full resize-none outline-none text-[#374151] placeholder:text-[#cbd5e1] leading-relaxed font-sans text-[16px]"
                 />
-            </motion.div>
+
+                <div className="flex items-center justify-between mt-6 pt-4 border-t border-[#f0f2f5]">
+                    <div className="flex items-center gap-2 text-[#3b82f6]">
+                        <IconSparkles size={16} />
+                        <span className="text-[12px] font-bold uppercase tracking-wider">AI Insights prêt</span>
+                    </div>
+                    <button
+                        onClick={handleSave}
+                        disabled={!entry.trim() || isSaving}
+                        className={cn(
+                            "w-12 h-12 rounded-[16px] flex items-center justify-center transition-all scale-press shadow-lg shadow-blue-500/20",
+                            entry.trim() ? "bg-[#0f172a] text-white" : "bg-[#f0f2f5] text-[#cbd5e1]"
+                        )}
+                    >
+                        {isSaving ? (
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        ) : (
+                            <IconSend size={20} />
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            <div className="card-base py-4 flex items-center justify-between group cursor-pointer hover:bg-slate-50 transition-colors">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                        <IconCalendar className="text-blue-500 w-5 h-5" />
+                    </div>
+                    <div>
+                        <p className="text-[14px] font-bold text-[#374151]">Historique</p>
+                        <p className="text-[12px] text-[#9ca3af]">Voir les entrées précédentes</p>
+                    </div>
+                </div>
+                <div className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-blue-500 group-hover:border-blue-100">
+                    <IconCalendar size={16} />
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,72 +1,91 @@
-import { motion } from "framer-motion";
-
+import { Ring } from "@/components/shared/Ring";
+import { IconWater, IconActivity, IconChevronRight, IconTrophy } from "@/components/shared/Icons";
 
 export default function Dashboard() {
+    const taskScore = 84; // Mock scores for design match
+    const habitScore = 75;
+    const overall = 80;
+
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-[13px] animate-fade-up">
             {/* Hero Card */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-slate-900 text-white p-6 rounded-3xl shadow-xl relative overflow-hidden"
-            >
-                <div className="relative z-10 flex justify-between items-center">
+            <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] p-5 rounded-[22px] shadow-card relative overflow-hidden">
+                <div className="flex items-center justify-between relative z-10">
                     <div>
-                        <h2 className="text-3xl font-bold">84%</h2>
-                        <p className="text-slate-400 text-sm font-medium">Daily Score</p>
+                        <p className="text-[#64748b] text-[12px] mb-1">
+                            {new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
+                        </p>
+                        <h2 className="text-white text-[21px] font-extrabold tracking-tight mb-4">
+                            Score du jour
+                        </h2>
+                        <div className="flex gap-[22px]">
+                            <div>
+                                <div className="text-[#3b82f6] text-[20px] font-extrabold">
+                                    {taskScore}%
+                                </div>
+                                <div className="text-[#475569] text-[11px] mt-px">Tâches</div>
+                            </div>
+                            <div>
+                                <div className="text-[#10b981] text-[20px] font-extrabold">
+                                    {habitScore}%
+                                </div>
+                                <div className="text-[#475569] text-[11px] mt-px">Habitudes</div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="w-16 h-16 rounded-full border-4 border-slate-700 flex items-center justify-center">
-                        <span className="text-lg font-bold">B+</span>
-                    </div>
+                    <Ring pct={overall} size={108} stroke={9} color="#3b82f6" bg="#1e293b">
+                        <span className="text-white text-[24px] font-extrabold">{overall}</span>
+                        <span className="text-[#475569] text-[10px]">/ 100</span>
+                    </Ring>
                 </div>
-                {/* Decorative background gradients */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-3xl rounded-full translate-x-10 -translate-y-10" />
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full -translate-x-10 translate-y-10" />
-            </motion.div>
+                {overall >= 100 && (
+                    <div className="absolute top-3 right-3 animate-bounce">
+                        <IconTrophy className="text-[#f59e0b] w-6 h-6" />
+                    </div>
+                )}
+            </div>
 
             {/* Quick Actions Grid */}
-            <div className="grid grid-cols-2 gap-4">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.1 }}
-                    className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
-                >
-                    <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-3">
-                        <span className="text-xl">💧</span>
+            <div className="grid grid-cols-2 gap-[13px]">
+                <div className="card-base card-hover">
+                    <p className="text-[#a0a8b5] text-[10.5px] font-bold tracking-[1.2px] uppercase mb-[13px]">Eau</p>
+                    <div className="flex items-end justify-between">
+                        <div>
+                            <p className="text-[#374151] text-[18px] font-bold">4/8</p>
+                            <p className="text-[#9ca3af] text-[12px]">tasses</p>
+                        </div>
+                        <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                            <IconWater size={20} className="text-blue-500" />
+                        </div>
                     </div>
-                    <h3 className="font-semibold text-slate-900">Water</h3>
-                    <p className="text-xs text-slate-500">4/8 cups</p>
-                </motion.div>
+                </div>
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
-                >
-                    <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center mb-3">
-                        <span className="text-xl">🏃</span>
+                <div className="card-base card-hover">
+                    <p className="text-[#a0a8b5] text-[10.5px] font-bold tracking-[1.2px] uppercase mb-[13px]">Exercice</p>
+                    <div className="flex items-end justify-between">
+                        <div>
+                            <p className="text-[#374151] text-[18px] font-bold">0/1</p>
+                            <p className="text-[#9ca3af] text-[12px]">session</p>
+                        </div>
+                        <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
+                            <IconActivity size={20} className="text-emerald-500" />
+                        </div>
                     </div>
-                    <h3 className="font-semibold text-slate-900">Exercise</h3>
-                    <p className="text-xs text-slate-500">0/1 session</p>
-                </motion.div>
+                </div>
             </div>
 
             {/* Upcoming Section */}
-            <div>
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Up Next</h3>
-                <div className="space-y-3">
-                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
-                        <div className="w-1 h-12 bg-blue-500 rounded-full" />
-                        <div className="flex-1">
-                            <h4 className="font-semibold text-slate-900 text-sm">Design Review</h4>
-                            <p className="text-xs text-slate-500">10:00 AM • Zoom</p>
-                        </div>
-                        <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400">
-                            →
-                        </button>
+            <div className="card-base card-hover">
+                <p className="text-[#a0a8b5] text-[10.5px] font-bold tracking-[1.2px] uppercase mb-[13px]">À venir</p>
+                <div className="flex items-center gap-4">
+                    <div className="w-1 h-12 bg-blue-500 rounded-full" />
+                    <div className="flex-1">
+                        <h4 className="font-bold text-[#374151] text-[14px]">Design Review</h4>
+                        <p className="text-[12px] text-[#9ca3af]">10:00 AM • Zoom</p>
                     </div>
+                    <button className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center text-slate-400">
+                        <IconChevronRight size={16} />
+                    </button>
                 </div>
             </div>
         </div>

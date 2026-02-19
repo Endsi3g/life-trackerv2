@@ -26,7 +26,7 @@ export function Ring({
 
     return (
         <div
-            className={cn("relative flex items-center justify-center", className)}
+            className={cn("relative flex items-center justify-center flex-shrink-0", className)}
             style={{ width: size, height: size }}
         >
             <svg width={size} height={size} className="-rotate-90 transform">
@@ -41,7 +41,7 @@ export function Ring({
                 <motion.circle
                     initial={{ strokeDashoffset: circ }}
                     animate={{ strokeDashoffset: circ - (Math.min(pct, 100) / 100) * circ }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    transition={{ duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }}
                     cx={size / 2} cy={size / 2} r={r}
                     fill="none"
                     stroke={color}

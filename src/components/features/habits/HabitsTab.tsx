@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useHabits } from "@/hooks/use-habits";
-import { Plus, Trash2 } from "lucide-react";
+import { IconPlus, IconCheck } from "@/components/shared/Icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Ring } from "@/components/shared/Ring";
 import { cn } from "@/lib/utils";
 
 export default function HabitsTab() {
-    const { habits, logs, loading, addHabit, logHabit, deleteHabit, today } = useHabits();
+    const { habits, logs, loading, addHabit, logHabit, today } = useHabits();
     const [isAdding, setIsAdding] = useState(false);
     const [newHabit, setNewHabit] = useState({ name: "", goal: "1", icon: "⭐", unit: "times" });
+
+    const days = ["L", "M", "M", "J", "V", "S", "D"];
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,116 +21,132 @@ export default function HabitsTab() {
     };
 
     return (
-        <div className="space-y-4 pb-20">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-slate-900">Habits</h2>
+        <div className="flex flex-col gap-[13px] animate-fade-up pb-24">
+            <div className="flex justify-between items-center px-1">
+                <p className="text-[#a0a8b5] text-[10.5px] font-bold tracking-[1.2px] uppercase">Habitudes</p>
                 <button
                     onClick={() => setIsAdding(!isAdding)}
-                    className="bg-slate-900 text-white p-2 rounded-full hover:bg-slate-800 transition-colors"
+                    className="w-8 h-8 rounded-full bg-white border border-[#e0e4ea] flex items-center justify-center text-[#94a3b8] shadow-sm scale-press"
                 >
-                    <Plus size={24} />
+                    <IconPlus size={18} />
                 </button>
             </div>
 
             <AnimatePresence>
                 {isAdding && (
                     <motion.form
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
+                        initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                        animate={{ height: "auto", opacity: 1, marginTop: 4 }}
+                        exit={{ height: 0, opacity: 0, marginTop: 0 }}
                         onSubmit={handleSubmit}
-                        className="overflow-hidden bg-white p-4 rounded-2xl shadow-sm border border-slate-100 mb-4"
+                        className="overflow-hidden"
                     >
-                        <div className="space-y-3">
+                        <div className="flex flex-col gap-3 p-1">
                             <input
                                 value={newHabit.name}
                                 onChange={e => setNewHabit({ ...newHabit, name: e.target.value })}
-                                placeholder="Habit name (e.g. Reader)"
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"
+                                placeholder="Nom de l'habitude (ex: Lecture)"
+                                className="w-full bg-white border border-[#e0e4ea] rounded-[15px] px-4 py-3 text-[14px] focus:outline-none focus:border-blue-400 shadow-sm"
                                 autoFocus
                             />
                             <div className="flex gap-2">
                                 <input
                                     value={newHabit.icon}
                                     onChange={e => setNewHabit({ ...newHabit, icon: e.target.value })}
-                                    placeholder="Icon"
-                                    className="w-16 text-center bg-slate-50 border border-slate-200 rounded-xl px-2 py-2"
+                                    placeholder="Icône"
+                                    className="w-16 text-center bg-white border border-[#e0e4ea] rounded-[15px] px-2 py-3 text-[14px] focus:outline-none"
                                     maxLength={2}
                                 />
                                 <input
                                     type="number"
                                     value={newHabit.goal}
                                     onChange={e => setNewHabit({ ...newHabit, goal: e.target.value })}
-                                    placeholder="Goal"
-                                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"
+                                    placeholder="Objectif"
+                                    className="flex-1 bg-white border border-[#e0e4ea] rounded-[15px] px-4 py-3 text-[14px] focus:outline-none"
                                 />
-                                <input
-                                    value={newHabit.unit}
-                                    onChange={e => setNewHabit({ ...newHabit, unit: e.target.value })}
-                                    placeholder="Unit"
-                                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"
-                                />
+                                <button type="submit" className="bg-[#0f172a] text-white px-6 rounded-[15px] font-bold text-[13px] scale-press shadow-md">
+                                    Créer
+                                </button>
                             </div>
-                            <button type="submit" className="w-full bg-slate-900 text-white py-2 rounded-xl font-bold">
-                                Create Habit
-                            </button>
                         </div>
                     </motion.form>
                 )}
             </AnimatePresence>
 
-            <div className="flex flex-col gap-3">
-                {loading && <div className="text-center text-slate-400 py-10">Loading habits...</div>}
+            <div className="flex flex-col gap-[10px]">
+                {loading && (
+                    <div className="card-base text-center py-10">
+                        <div className="w-6 h-6 border-2 border-[#10b981] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                        <p className="text-[#9ca3af] text-[13px]">Chargement...</p>
+                    </div>
+                )}
 
-                {habits.map((habit, i) => {
+                {habits.map((habit) => {
                     const log = logs.find(l => l.habit_id === habit.id && l.date === today);
                     const current = log?.value || 0;
                     const pct = Math.min((current / habit.goal) * 100, 100);
 
                     return (
-                        <motion.div
-                            key={habit.id}
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: i * 0.05 }}
-                            className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 relative group"
-                        >
-                            <div
-                                className="cursor-pointer relative"
+                        <div key={habit.id} className="card-base card-hover flex items-center justify-between gap-4 py-[18px]">
+                            <div className="flex items-center gap-4 flex-1 min-w-0">
+                                <div className="cursor-pointer relative flex-shrink-0" onClick={() => logHabit(habit.id)}>
+                                    <Ring pct={pct} size={54} stroke={5} color={habit.color || "#10b981"} bg="#f0f2f5">
+                                        <span className="text-[18px]">{habit.icon}</span>
+                                    </Ring>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="text-[15px] font-bold text-[#374151] mb-1 truncate">{habit.name}</h3>
+                                    <div className="flex gap-[6px] items-center">
+                                        {[...Array(5)].map((_, dotIdx) => (
+                                            <div
+                                                key={dotIdx}
+                                                className={cn(
+                                                    "w-2.5 h-2.5 rounded-full",
+                                                    dotIdx === 4
+                                                        ? (pct === 100 ? "bg-[#10b981]" : "bg-[#f0f2f5] border-[1.5px] border-[#e0e4ea]")
+                                                        : "bg-[#10b981]/20"
+                                                )}
+                                            />
+                                        ))}
+                                        <span className="text-[10px] text-[#9ca3af] font-bold ml-1 uppercase tracking-wider">
+                                            {current} / {habit.goal}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
                                 onClick={() => logHabit(habit.id)}
+                                className={cn(
+                                    "w-11 h-11 rounded-[14px] flex items-center justify-center transition-all scale-press",
+                                    pct === 100
+                                        ? "bg-[#10b981] text-white shadow-lg shadow-emerald-500/20"
+                                        : "bg-[#f0f2f5] text-[#94a3b8]"
+                                )}
                             >
-                                <Ring pct={pct} size={48} stroke={4} color={habit.color || "#3b82f6"}>
-                                    <span className="text-xl">{habit.icon}</span>
-                                </Ring>
-                            </div>
-
-                            <div className="flex-1">
-                                <h3 className="font-semibold text-slate-900">{habit.name}</h3>
-                                <p className={cn("text-xs font-medium transition-colors", pct === 100 ? "text-blue-500" : "text-slate-400")}>
-                                    {current} / {habit.goal} {habit.unit}
-                                </p>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => logHabit(habit.id)}
-                                    className={cn(
-                                        "w-8 h-8 rounded-lg flex items-center justify-center transition-all active:scale-95",
-                                        pct === 100 ? "bg-blue-500 text-white shadow-md shadow-blue-500/20" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                                    )}
-                                >
-                                    +
-                                </button>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); deleteHabit(habit.id); }}
-                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:bg-red-50 hover:text-red-500 transition-colors"
-                                >
-                                    <Trash2 size={16} />
-                                </button>
-                            </div>
-                        </motion.div>
+                                <IconCheck size={22} className={cn("transition-transform", pct === 100 ? "scale-100" : "scale-90")} />
+                            </button>
+                        </div>
                     );
                 })}
+            </div>
+
+            {/* Weekly Overview */}
+            <div className="card-base mt-4">
+                <p className="text-[#a0a8b5] text-[10.5px] font-bold tracking-[1.2px] uppercase mb-[13px]">Vue Hebdomadaire</p>
+                <div className="flex justify-between items-center px-1">
+                    {days.map((day, i) => (
+                        <div key={i} className="flex flex-col items-center gap-2">
+                            <span className="text-[10px] font-bold text-[#94a3b8]">{day}</span>
+                            <div className={cn(
+                                "w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold transition-colors",
+                                i === new Date().getDay() - 1 ? "bg-[#0f172a] text-white" : "text-[#374151] bg-[#f0f2f5]"
+                            )}>
+                                {new Date().getDate() - (new Date().getDay() - 1) + i}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

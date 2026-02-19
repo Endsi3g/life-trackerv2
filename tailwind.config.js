@@ -11,9 +11,18 @@ export default {
                 serif: ['Lora', 'serif'],
             },
             colors: {
-                // Mapping original hex codes to semantic names if needed, 
-                // but Tailwind's slate/blue/emerald usually cover it.
-                // Original bg: #f0f2f5 (slate-100/gray-100 mix)
+                background: '#f0f2f5',
+                card: '#ffffff',
+                primary: '#3b82f6',
+                dark: '#0f172a',
+                'dark-light': '#1e293b',
+            },
+            borderRadius: {
+                '3xl': '22px',
+            },
+            boxShadow: {
+                card: '0 2px 12px rgba(0,0,0,0.05)',
+                lift: '0 6px 20px rgba(0,0,0,0.08)',
             },
             animation: {
                 'fade-up': 'fadeUp 0.38s cubic-bezier(.22,1,.36,1) both',

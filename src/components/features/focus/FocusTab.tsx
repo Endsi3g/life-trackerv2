@@ -1,25 +1,22 @@
 import { useState, useEffect } from "react";
-
-import { Play, Pause, RotateCcw } from "lucide-react";
 import { Ring } from "@/components/shared/Ring";
 import { cn } from "@/lib/utils";
+import { IconRefresh, IconTarget, IconCoffee, IconPlay, IconPause } from "@/components/shared/Icons";
 
 export default function FocusTab() {
     const [isActive, setIsActive] = useState(false);
-    const [duration, setDuration] = useState(25 * 60); // 25 minutes default
+    const [duration, setDuration] = useState(25 * 60);
     const [timeLeft, setTimeLeft] = useState(duration);
     const [mode, setMode] = useState<"focus" | "break">("focus");
 
     useEffect(() => {
         let interval: ReturnType<typeof setInterval>;
-
         if (isActive && timeLeft > 0) {
             interval = setInterval(() => {
                 setTimeLeft((time) => time - 1);
             }, 1000);
         } else if (timeLeft === 0) {
             setIsActive(false);
-            // Play sound or notification here
             if (mode === "focus") {
                 setMode("break");
                 setDuration(5 * 60);
@@ -30,17 +27,8 @@ export default function FocusTab() {
                 setTimeLeft(25 * 60);
             }
         }
-
         return () => clearInterval(interval);
     }, [isActive, timeLeft, mode]);
-
-    const toggleTimer = () => setIsActive(!isActive);
-    const resetTimer = () => {
-        setIsActive(false);
-        setTimeLeft(duration);
-    };
-
-    const progress = ((duration - timeLeft) / duration) * 100;
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -48,62 +36,105 @@ export default function FocusTab() {
         return `${mins}:${secs.toString().padStart(2, "0")}`;
     };
 
+    const progress = ((duration - timeLeft) / duration) * 100;
+    const presets = [15, 25, 45, 60];
+
     return (
-        <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-8">
-            <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold text-slate-900">
-                    {mode === "focus" ? "Focus Time" : "Break Time"}
-                </h2>
-                <p className="text-slate-500">
-                    {isActive ? "Stay concentrated" : "Ready to start?"}
-                </p>
-            </div>
-
-            <Ring pct={progress} size={280} stroke={12} color={mode === "focus" ? "#3b82f6" : "#10b981"}>
-                <div className="text-5xl font-mono font-semibold tracking-tighter text-slate-800">
-                    {formatTime(timeLeft)}
+        <div className="flex flex-col gap-[13px] animate-fade-up">
+            <div className="card-base text-center py-8">
+                <div className="flex gap-2 justify-center mb-6">
+                    {presets.map((p) => (
+                        <button
+                            key={p}
+                            onClick={() => {
+                                setDuration(p * 60);
+                                setTimeLeft(p * 60);
+                                setIsActive(false);
+                                setMode("focus");
+                            }}
+                            className={cn(
+                                "px-[14px] py-[5px] rounded-full text-[11.5px] font-semibold transition-all scale-press border-[1.5px]",
+                                duration === p * 60 && mode === "focus"
+                                    ? "bg-[#0f172a] border-[#0f172a] text-white"
+                                    : "bg-transparent border-[#e0e4ea] text-[#9ca3af]"
+                            )}
+                        >
+                            {p}min
+                        </button>
+                    ))}
                 </div>
-            </Ring>
 
-            <div className="flex items-center gap-4">
-                <button
-                    onClick={toggleTimer}
-                    className={cn(
-                        "p-4 rounded-full text-white transition-all transform hover:scale-105 active:scale-95 shadow-lg",
-                        isActive ? "bg-amber-500" : "bg-slate-900"
+                <div className="relative inline-block mb-6">
+                    {isActive && (
+                        <div className="absolute -inset-2 rounded-full animate-pulse-slow bg-blue-500/5 pointer-events-none" />
                     )}
-                >
-                    {isActive ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-1" />}
-                </button>
+                    <Ring
+                        pct={progress}
+                        size={220}
+                        stroke={11}
+                        color={mode === "focus" ? "#0f172a" : "#10b981"}
+                        bg="#f0f2f5"
+                    >
+                        <span className="text-[44px] font-extrabold text-[#0f172a] tabular-nums tracking-tighter">
+                            {formatTime(timeLeft)}
+                        </span>
+                        <span className="text-[12px] text-[#94a3b8] font-medium mt-1 flex items-center gap-1.5 justify-center">
+                            {mode === "focus" ? (
+                                <>
+                                    <IconTarget size={14} />
+                                    <span>Focus</span>
+                                </>
+                            ) : (
+                                <>
+                                    <IconCoffee size={14} />
+                                    <span>Pause</span>
+                                </>
+                            )}
+                        </span>
+                    </Ring>
+                </div>
 
-                <button
-                    onClick={resetTimer}
-                    className="p-4 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors"
-                >
-                    <RotateCcw size={24} />
-                </button>
-            </div>
-
-            <div className="flex gap-2">
-                {[25, 45, 60].map((mins) => (
+                <div className="flex items-center justify-center gap-4">
                     <button
-                        key={mins}
-                        onClick={() => {
-                            setDuration(mins * 60);
-                            setTimeLeft(mins * 60);
-                            setIsActive(false);
-                            setMode("focus");
-                        }}
+                        onClick={() => setIsActive(!isActive)}
                         className={cn(
-                            "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-                            duration === mins * 60 && mode === "focus"
-                                ? "bg-blue-100 text-blue-700"
-                                : "text-slate-500 hover:bg-slate-50"
+                            "px-9 py-[13px] rounded-[15px] text-white text-[15px] font-bold shadow-lg transition-all scale-press flex items-center justify-center gap-2",
+                            mode === "focus" ? "bg-[#0f172a]" : "bg-[#10b981]"
                         )}
                     >
-                        {mins}m
+                        {isActive ? (
+                            <>
+                                <IconPause size={18} />
+                                <span>Pause</span>
+                            </>
+                        ) : (
+                            <>
+                                <IconPlay size={18} />
+                                <span>Démarrer</span>
+                            </>
+                        )}
                     </button>
-                ))}
+                    <button
+                        onClick={() => {
+                            setIsActive(false);
+                            setTimeLeft(duration);
+                        }}
+                        className="p-[13px] rounded-[15px] bg-[#f0f2f5] border-[1.5px] border-[#e0e4ea] text-[#94a3b8] scale-press flex items-center justify-center"
+                    >
+                        <IconRefresh size={18} />
+                    </button>
+                </div>
+            </div>
+
+            <div className="card-base">
+                <p className="text-[#a0a8b5] text-[10.5px] font-bold tracking-[1.2px] uppercase mb-[13px]">Sessions aujourd'hui</p>
+                <div className="flex items-center gap-4">
+                    <span className="text-[38px] font-extrabold text-[#0f172a]">0</span>
+                    <div>
+                        <p className="text-[13px] text-[#374151] font-bold">Sessions complétées</p>
+                        <p className="text-[12px] text-[#9ca3af]">0 min de focus total</p>
+                    </div>
+                </div>
             </div>
         </div>
     );

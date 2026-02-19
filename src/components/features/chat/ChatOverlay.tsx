@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Sparkles } from "lucide-react";
+import { IconClose as X, IconSend as Send, IconSparkles as Sparkles, IconDashboard as Command } from "@/components/shared/Icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTasks } from "@/hooks/use-tasks";
 import { useHabits } from "@/hooks/use-habits";
@@ -20,7 +20,7 @@ interface Message {
 
 export default function ChatOverlay({ isOpen, onClose }: ChatOverlayProps) {
     const [messages, setMessages] = useState<Message[]>([
-        { id: "1", role: "assistant", text: "Hi! I'm your life assistant. Tell me to 'add task', 'log water', or 'journal' something.", timestamp: new Date() }
+        { id: "1", role: "assistant", text: "Salut ! Je suis ton assistant personnel. Comment puis-je t'aider aujourd'hui ?", timestamp: new Date() }
     ]);
     const [input, setInput] = useState("");
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -45,33 +45,30 @@ export default function ChatOverlay({ isOpen, onClose }: ChatOverlayProps) {
         // Simulate AI processing
         setTimeout(() => {
             processCommand(userMsg.text);
-        }, 600);
+        }, 800);
     };
 
     const processCommand = (text: string) => {
         const lower = text.toLowerCase();
-        let responseText = "I didn't catch that. Try 'add task [name]' or 'log [habit]'.";
+        let responseText = "Je n'ai pas compris. Tu peux dire 'ajouter tâche [nom]' ou 'boire de l'eau'.";
 
-        if (lower.startsWith("add task") || lower.startsWith("remind me to")) {
-            const taskText = lower.replace(/add task|remind me to/gi, "").trim();
+        if (lower.includes("ajouter") || lower.includes("tâche")) {
+            const taskText = text.replace(/ajouter|tâche|tache/gi, "").trim();
             if (taskText) {
                 addTask(taskText);
-                responseText = `Added task: "${taskText}"`;
+                responseText = `C'est fait ! J'ai ajouté : "${taskText}" à ta liste.`;
             }
-        } else if (lower.startsWith("log") || lower.startsWith("track")) {
-            const habitName = lower.replace(/log|track/gi, "").trim();
-            const habit = habits.find(h => h.name.toLowerCase().includes(habitName));
+        } else if (lower.includes("eau") || lower.includes("water") || lower.includes("boire")) {
+            const habit = habits.find(h => h.name.toLowerCase().includes("eau") || h.name.toLowerCase().includes("water"));
             if (habit) {
                 logHabit(habit.id);
-                responseText = `Logged ${habit.name}! Keep it up.`;
-            } else {
-                responseText = `I couldn't find a habit matching "${habitName}".`;
+                responseText = "Hydratation enregistrée ! Continue comme ça.";
             }
-        } else if (lower.startsWith("journal")) {
-            const content = lower.replace("journal", "").trim();
+        } else if (lower.includes("journal") || lower.includes("noter")) {
+            const content = text.replace(/journal|noter/gi, "").trim();
             if (content) {
                 addEntry(content, new Date().toISOString());
-                responseText = "Saved to your journal.";
+                responseText = "Entrée enregistrée dans ton journal.";
             }
         }
 
@@ -88,64 +85,88 @@ export default function ChatOverlay({ isOpen, onClose }: ChatOverlayProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+                        className="fixed inset-0 bg-[#f0f2f5]/80 backdrop-blur-md z-40"
                     />
                     <motion.div
                         initial={{ y: "100%" }}
                         animate={{ y: 0 }}
                         exit={{ y: "100%" }}
-                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                        className="fixed inset-x-0 bottom-0 z-50 h-[80vh] bg-white rounded-t-3xl shadow-2xl flex flex-col overflow-hidden"
+                        transition={{ type: "spring", damping: 28, stiffness: 220 }}
+                        className="fixed inset-x-0 bottom-0 z-50 h-[85vh] bg-white rounded-t-[32px] shadow-lift flex flex-col overflow-hidden border-t border-black/5"
                     >
+                        {/* Smooth handle bar */}
+                        <div className="flex justify-center py-3">
+                            <div className="w-10 h-1.5 bg-[#e2e8f0] rounded-full" />
+                        </div>
+
                         {/* Header */}
-                        <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-white/50 backdrop-blur-md">
-                            <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white">
-                                    <Sparkles size={16} />
+                        <div className="flex items-center justify-between px-6 pb-4 pt-1">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-[#0f172a] rounded-[14px] flex items-center justify-center text-white shadow-lg shadow-slate-200">
+                                    <Sparkles size={18} />
                                 </div>
-                                <h3 className="font-bold text-slate-900">Assistant</h3>
+                                <div>
+                                    <h3 className="font-bold text-[#0f172a] text-[16px]">Cal AI</h3>
+                                    <div className="flex items-center gap-1.5">
+                                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                                        <span className="text-[11px] font-bold text-[#94a3b8] uppercase tracking-wider">Connecté</span>
+                                    </div>
+                                </div>
                             </div>
-                            <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full text-slate-500">
+                            <button onClick={onClose} className="w-10 h-10 bg-[#f0f2f5] rounded-full flex items-center justify-center text-[#94a3b8] scale-press">
                                 <X size={20} />
                             </button>
                         </div>
 
                         {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50" ref={scrollRef}>
+                        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6" ref={scrollRef}>
                             {messages.map((msg) => (
                                 <div
                                     key={msg.id}
                                     className={cn(
-                                        "max-w-[80%] p-3 rounded-2xl text-sm leading-relaxed",
-                                        msg.role === "user"
-                                            ? "ml-auto bg-blue-600 text-white rounded-tr-none"
-                                            : "bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-sm"
+                                        "max-w-[85%] flex flex-col gap-1.5",
+                                        msg.role === "user" ? "ml-auto items-end" : "items-start"
                                     )}
                                 >
-                                    {msg.text}
+                                    <div
+                                        className={cn(
+                                            "p-4 text-[14.5px] leading-[1.5] shadow-sm",
+                                            msg.role === "user"
+                                                ? "bg-[#0f172a] text-white rounded-[20px] rounded-tr-[4px]"
+                                                : "bg-[#f8fafc] text-[#374151] rounded-[20px] rounded-tl-[4px] border border-[#f1f5f9]"
+                                        )}
+                                    >
+                                        {msg.text}
+                                    </div>
+                                    <span className="text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest px-1">
+                                        {msg.role === "user" ? "Vous" : "Assistant"}
+                                    </span>
                                 </div>
                             ))}
                         </div>
 
-                        {/* Input */}
-                        <div className="p-4 bg-white border-t border-slate-100">
+                        {/* Input Area */}
+                        <div className="p-6 bg-white border-t border-[#f1f5f9]">
                             <form
                                 onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-                                className="flex items-center gap-2 bg-slate-100 rounded-full px-4 py-2"
+                                className="relative flex items-center"
                             >
+                                <div className="absolute left-4 text-[#94a3b8]">
+                                    <Command size={18} />
+                                </div>
                                 <input
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
-                                    placeholder="Ask AI..."
-                                    className="flex-1 bg-transparent border-none focus:outline-none text-slate-900 placeholder:text-slate-400"
+                                    placeholder="Posez-moi une question..."
+                                    className="w-full bg-[#f8fafc] border border-[#e2e8f0] rounded-[18px] pl-11 pr-14 py-4 text-[15px] text-[#0f172a] placeholder:text-[#94a3b8] focus:outline-none focus:border-blue-400 focus:shadow-[0_0_0_4px_rgba(59,130,246,0.05)] transition-all"
                                     autoFocus
                                 />
                                 <button
                                     type="submit"
                                     disabled={!input.trim()}
-                                    className="p-2 bg-blue-600 text-white rounded-full disabled:opacity-50 disabled:bg-slate-300 transition-colors"
+                                    className="absolute right-2 w-11 h-11 bg-[#0f172a] text-white rounded-[14px] flex items-center justify-center disabled:opacity-30 transition-all scale-press shadow-md"
                                 >
-                                    <Send size={16} />
+                                    <Send size={18} />
                                 </button>
                             </form>
                         </div>

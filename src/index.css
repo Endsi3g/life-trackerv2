@@ -1,12 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lift: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius-3xl: 22px;
+}
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased overflow-x-hidden;
+    @apply bg-[#f0f2f5] text-[#374151] font-sans antialiased overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .card-base {
+    @apply bg-white rounded-[22px] p-5 border border-black/5 shadow-card transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply hover:-translate-y-0.5 hover:shadow-lift;
   }
 }
 
@@ -14,7 +28,7 @@
   .scale-press {
     @apply active:scale-95 transition-transform duration-200;
   }
-  
+
   .hover-lift {
     @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg;
   }
