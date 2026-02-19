@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Habit, HabitLog } from "@/types";
+import type { Habit, HabitLog } from "@/types";
 import { format } from "date-fns";
 
 export function useHabits() {

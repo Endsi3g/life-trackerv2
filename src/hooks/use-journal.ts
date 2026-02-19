@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { JournalEntry } from "@/types";
+import type { JournalEntry } from "@/types";
 
 export function useJournal() {
     const [entries, setEntries] = useState<JournalEntry[]>([]);
