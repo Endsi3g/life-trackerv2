@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, Sparkles } from "lucide-react";
+import { X, Send, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTasks } from "@/hooks/use-tasks";
 import { useHabits } from "@/hooks/use-habits";

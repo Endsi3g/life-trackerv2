@@ -17,7 +17,6 @@ export default function App() {
             <Route path="focus" element={<FocusTab />} />
             <Route path="/tasks" element={<TasksTab />} />
             <Route path="habits" element={<HabitsTab />} />
-            <Route path="/habits" element={<HabitsTab />} />
             <Route path="/journal" element={<JournalTab />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

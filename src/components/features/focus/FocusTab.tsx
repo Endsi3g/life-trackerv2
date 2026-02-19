@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+
 import { Play, Pause, RotateCcw } from "lucide-react";
 import { Ring } from "@/components/shared/Ring";
 import { cn } from "@/lib/utils";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTasks } from "@/hooks/use-tasks";
-import { Plus, Trash2, CheckCircle2, Circle, Upload, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, Circle, Image as ImageIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
