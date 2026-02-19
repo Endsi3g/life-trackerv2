@@ -1,3 +1,10 @@
+# Ensure Node.js is in PATH
+$nodePath = "C:\Program Files\nodejs"
+if ($env:Path -notlike "*$nodePath*") {
+    $env:Path += ";$nodePath"
+    Write-Host "Added $nodePath to PATH for this session." -ForegroundColor Cyan
+}
+
 # Start Supabase (requires Docker)
 Write-Host "Starting Supabase Local Development..." -ForegroundColor Green
 npx supabase start
